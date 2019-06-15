@@ -40,12 +40,14 @@
     field)
    ((symbolp field)
     (symbol-name field))
-   ((listp (car field))
+   ((and (listp (car field))
+         (car field))
     (concat (format "%s: " (caar field))
             (gsexp--encode-field (cons (cadar field)
                                        (cdr field)))))
    (t
-    (concat (symbol-name (pop field))
+    (concat (let ((f (pop field)))
+              (and f (symbol-name f)))
             (and (vectorp (car field))
                  (format " (\n%s)"
                          (mapconcat #'gsexp--encode-argument
